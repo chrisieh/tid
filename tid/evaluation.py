@@ -3,6 +3,21 @@ import root_numpy as rnp
 from sklearn.metrics import roc_curve
 
 
+def load_tmva(rootf):
+    """Returns truth, score, weight from TMVA root-file"""
+    data = rnp.root2array(rootf, treename="TestTree",
+                          branches=["classifier", "classID", "weight"])
+    
+    # Convert tmva scheme (sig 0, bkg 1) to (sig 1, bkg 0)
+    truth = data["classID"]
+    sig = (truth == 0)
+    bkg = np.logical_not(sig)
+    truth[sig] = 1
+    truth[bkg] = 0
+
+    return truth, data["classifier"], data["weight"]
+
+
 def tmva_roc(rootf):
     """Returns fpr, tpr, thr for a TMVA-style root-file"""
     data = rnp.root2array(rootf, treename="TestTree",
