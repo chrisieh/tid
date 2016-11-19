@@ -20,17 +20,9 @@ def load_tmva(rootf):
 
 def tmva_roc(rootf):
     """Returns fpr, tpr, thr for a TMVA-style root-file"""
-    data = rnp.root2array(rootf, treename="TestTree",
-                          branches=["classifier", "classID", "weight"])
-    
-    # Convert tmva scheme (sig 0, bkg 1) to (sig 1, bkg 0)
-    truth = data["classID"]
-    sig = (truth == 0)
-    bkg = np.logical_not(sig)
-    truth[sig] = 1
-    truth[bkg] = 0
+    truth, score, weight = load_tmva(rootf)
 
-    return roc_curve(truth, data["classifier"], sample_weight=data["weight"])
+    return roc_curve(truth, score, sample_weight=weight)
 
 
 def root_roc(sigf, bkgf, branch, weight="weight", tree="CollectionTree"):
