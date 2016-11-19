@@ -18,5 +18,5 @@ if __name__ == "__main__":
     for eff in wp:
         bdt_thr = ev.bdt_threshold(tpr, thr, eff)
         rej, err = ev.rejection(score[truth == 0], weight[truth == 0], bdt_thr)
-        print("Rej. @{} eff.: {} +- {}",format(wp, rej, err))
+        print("Rej. @{} eff.: {} +- {}".format(wp, rej, err))
 
